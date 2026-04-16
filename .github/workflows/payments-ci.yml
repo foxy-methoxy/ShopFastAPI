@@ -1,0 +1,40 @@
+name: payments-ci.yml
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'services/payments/**'
+
+  pull_request:
+    paths:
+      - 'services/payments/**'
+
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install UV
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+
+      - name: Run Tests
+        run: | 
+          cd services/api_gateway
+          uv run ruff check . 
+          uv run pytest
+
+#  changes:
+#    runs-on: ubuntu-latest
+#    outputs:
+#      services: ${{ steps.filter.outputs.changes }}
+#    steps:
+#      - uses: actions/checkout@v4
+#      - uses: dorny/paths-filter@v4
+#        id: changes
+#        with:
+#          filters: |
+#            apigateway:
+#              - 'apigateway/**'
+#  test:
